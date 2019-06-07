@@ -54,11 +54,15 @@ class Window < Gosu::Window
 
   def draw
     case @state.current
-    when :PLACING
-      @map.draw
-      @menu.draw
     when :CHARGEN
       @chargen.draw
+      @menu.draw
+    when :PLAYING
+      @map.draw
+      @menu.draw
+      
+    when :PLACING
+      @map.draw
       @menu.draw
     else
       throw('UNKNOWN STATE!')

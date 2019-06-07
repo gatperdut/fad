@@ -1,6 +1,6 @@
 class State
 
-  attr_reader :current
+  attr_accessor :current
 
   def initialize(window)
     @window = window

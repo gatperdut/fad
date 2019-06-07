@@ -1,4 +1,5 @@
-require './character'
+require './characters/frame'
+require './characters/character'
 require './utils/classes'
 
 class Chargen
@@ -11,11 +12,7 @@ class Chargen
   def initialize(window)
     @window = window
 
-    @characters = []
-
-    @frame = @window.image("media/portraits/frame.png")
-
-    @font = @window.font(50)
+    @frames = []
 
     @needs_redraw = false
 
@@ -23,10 +20,11 @@ class Chargen
   end
 
   def generate
-    @characters.clear
+    @frames.clear
 
     1.upto(4) do |n|
-      @characters << Character.new(@window, Classes::ALL.sample)
+      character = Character.new(@window, Classes::ALL.sample)
+      @frames << Frame.new(@window, character)
     end
 
     @needs_redraw = true
@@ -35,21 +33,25 @@ class Chargen
   def draw
     0.upto(1) do |y|
       0.upto(1) do |x|
-        character = @characters[y * 2 + x]
-
-        character.portrait.draw(200 + x * 400, 240 + y * 500, 0, 1.0, 1.0)
-        @frame.draw(185 + x * 400, 220 + y * 500, 0, 0.89, 0.89)
-
-        @font.draw_text("#{character.name}", 200 + x * 400, 400 + y * 500, 0, 1.0, 1.0, 0xFF888888)
-        @font.draw_text("#{character.klass} Lvl #{character.level}", 170 + x * 400, 450 + y * 500, 0, 1.0, 1.0, 0xFF888888)
+        @frames[y * 2 + x].draw(y, x)
       end
     end
 
     @needs_redraw = false
   end
 
+  def accept
+    state.current = :PLAYING
+  end
+
   def handle_input(id)
     generate if id == Gosu::KbG
+
+    accept if id == Gosu::KbReturn
+  end
+
+  def state
+    @window.state
   end
 
 end
