@@ -30,4 +30,11 @@ module Directions
     w: Coord.new( 0, -1)
   }
 
+  OPPOSITE = {
+    n: :s,
+    e: :w,
+    s: :n,
+    w: :e
+  }
+
 end

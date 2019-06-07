@@ -26,6 +26,10 @@ class Room
     @needs_redraw = false
   end
 
+  def fits_with(dock_tile)
+    @layout.fits_with(dock_tile)
+  end
+
   def rotate
     @layout.rotate
 

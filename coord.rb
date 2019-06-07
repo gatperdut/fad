@@ -12,4 +12,8 @@ class Coord
     Coord.new(@y + coord.y, @x + coord.x)
   end
 
+  def ==(coord)
+    @x == coord.x && @y == coord.y
+  end
+
 end

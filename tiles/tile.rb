@@ -2,6 +2,9 @@ require './coord'
 
 class Tile
 
+  attr_reader :code
+  attr_reader :coord
+
   def initialize(layout, y, x, code)
     @layout = layout
     @coord = Coord.new(y, x)
@@ -39,6 +42,10 @@ class Tile
     window.draw_line(west_boundary, north_boundary, color, west_boundary, south_boundary, color)
     window.draw_line(east_boundary, north_boundary, color, east_boundary, south_boundary, color)
     window.draw_line(west_boundary, south_boundary, color, east_boundary, south_boundary, color)
+  end
+
+  def world_coord
+    room.coord + @coord
   end
 
   def room

@@ -4,28 +4,27 @@ class Placer
 
   attr_reader :needs_redraw
   alias_method :needs_redraw?, :needs_redraw
+  attr_reader :valid
+  alias_method :valid?, :valid
 
   include Directions
 
   def initialize(room)
     @room = room
 
-    @arrow_codes = {
-      82 => 'up',
-      79 => 'right',
-      81 => 'down',
-      80 => 'left'
-    }
-
     @dock = nil
 
     @needs_redraw = false
+
+    @valid = false
   end
 
   def handle_input(id)
     @room.move(Directions::KB2DIR[id]) if Directions::KB2DIR.include?(id)
 
-    @room.rotate if id == Gosu::KB_R
+    finish_placing if @valid && id == Gosu::KbReturn
+
+    @room.rotate if id == Gosu::KbR
 
     validate
 
@@ -37,8 +36,12 @@ class Placer
     @dock.start_blinking
   end
 
+  def finish_placing
+    puts "DONE"
+  end
+
   def validate
-    puts @dock.destination
+    @valid = @room.fits_with(@dock)
   end
 
   def draw

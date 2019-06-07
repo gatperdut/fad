@@ -25,6 +25,14 @@ class DockTile < Tile
     send("draw_connection_#{@code}")
   end
 
+  def dest_coord
+    world_coord + Directions::INCREMENT[@code]
+  end
+
+  def fits_with(dock_tile)
+    dest_coord == dock_tile.world_coord && Directions::OPPOSITE[@code] == dock_tile.code
+  end
+
   def start_blinking
     @blinker.start
   end
@@ -53,8 +61,5 @@ class DockTile < Tile
     window.draw_rect(west_boundary - 1, north_boundary, 4, 30, connection_color)
   end
 
-  def destination
-    room.coord + Directions::INCREMENT[@code]
-  end
 
 end

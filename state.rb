@@ -1,17 +1,25 @@
 class State
 
+  attr_reader :current
+
   def initialize(window)
     @window = window
-    @current = :PLACING
+    @current = :CHARGEN
   end
 
   def handle_input(id)
     case @current
     when :PLACING
       placer.handle_input(id)
+    when :CHARGEN
+      chargen.handle_input(id)
     else
       throw('UNKNOWN STATE!')
     end
+  end
+
+  def chargen
+    @window.chargen
   end
 
   def map

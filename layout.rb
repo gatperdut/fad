@@ -56,6 +56,12 @@ class Layout
     end
   end
 
+  def fits_with(dock_tile)
+    @dock_tiles.any? do |my_dock_tile|
+      my_dock_tile.fits_with(dock_tile)
+    end
+  end
+
   def rotate
     new_raw = []
 
