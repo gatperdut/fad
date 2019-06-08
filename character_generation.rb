@@ -2,7 +2,7 @@ require './characters/frame'
 require './characters/character'
 require './utils/classes'
 
-class Chargen
+class CharacterGeneration
 
   attr_reader :needs_redraw
   alias_method :needs_redraw?, :needs_redraw
@@ -41,7 +41,9 @@ class Chargen
   end
 
   def accept
-    state.current = :PLAYING
+    main_state.current = :in_game
+
+    @needs_redraw = true
   end
 
   def handle_input(id)
@@ -50,8 +52,8 @@ class Chargen
     accept if id == Gosu::KbReturn
   end
 
-  def state
-    @window.state
+  def main_state
+    @window.main_state
   end
 
 end

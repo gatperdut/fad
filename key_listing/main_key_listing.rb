@@ -1,30 +1,6 @@
-class Menu
+module MainKeyListing
 
-  def initialize(window)
-    @window = window
-
-    @font = @window.font(50)
-
-    @images = {
-      frame:     @window.image('media/parchment.png'),
-      kb_arrows: @window.image('media/kb_arrows.png'),
-      G:         @window.image('media/G.png'),
-      R:         @window.image('media/R.png'),
-      esc:       @window.image('media/esc.png'),
-      enter:     @window.image('media/enter.png')
-    }
-  end
-
-  def draw
-    draw_frame
-    send("draw_#{state.current}")
-  end
-
-  def draw_frame
-    @images[:frame].draw(1200, 200, 0, 0.7, 0.7)
-  end
-
-  def draw_PLACING
+  def draw_welcome_page
     @images[:kb_arrows].draw(1300, 370, 0, 0.5, 0.5)
     @font.draw_text('Move room', 1450, 390, 0, 1.0, 1.0, 0xFF222222)
 
@@ -38,7 +14,7 @@ class Menu
     @font.draw_text('Cancel', 1450, 740, 0, 1.0, 1.0, 0xFF222222)
   end
 
-  def draw_CHARGEN
+  def draw_character_generation
     @images[:G].draw(1330, 440, 0, 0.5, 0.5)
     @font.draw_text('Generate', 1450, 440, 0, 1.0, 1.0, 0xFF222222)
 
@@ -46,16 +22,8 @@ class Menu
     @font.draw_text('Accept', 1450, 620, 0, 1.0, 1.0, 0xFF222222)
   end
 
-  def state
-    @window.state
-  end
-
-  def map
-    @window.map
-  end
-
-  def placer
-    map.placer
+  def draw_in_game
+    send("draw_#{in_game_state.current}")
   end
 
 end

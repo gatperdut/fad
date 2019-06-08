@@ -1,25 +1,30 @@
 require 'gosu'
 
-require './state'
-require './chargen'
+require './states/main_state'
+require './states/in_game_state'
+require './character_generation'
 require './map'
-require './menu'
+require './key_listing/key_listing'
  
 class Window < Gosu::Window
 
-  attr_reader :state
-  attr_reader :chargen
+  attr_reader :main_state
+  attr_reader :in_game_state
+  attr_reader :character_generation
   attr_reader :map
+  attr_reader :key_listing
 
   def initialize(width=2000, height=1200, fullscreen=false)
     super
     self.caption = 'FAD'
 
-    @state = State.new(self)
+    @main_state = MainState.new(self)
 
-    @chargen = Chargen.new(self)
+    @in_game_state = InGameState.new(self)
 
-    @menu = Menu.new(self)
+    @character_generation = CharacterGeneration.new(self)
+
+    @key_listing = KeyListing.new(self)
 
     @map = Map.new(self)
 
@@ -41,7 +46,7 @@ class Window < Gosu::Window
   def button_down(id)
     close if id == Gosu::KbEscape
 
-    @state.handle_input(id)
+    @main_state.handle_input(id)
   end
 
   def needs_cursor?
@@ -49,24 +54,12 @@ class Window < Gosu::Window
   end
 
   def needs_redraw?
-    !@scene_ready || @map.needs_redraw? || @chargen.needs_redraw?
+    !@scene_ready || @map.needs_redraw? || @character_generation.needs_redraw?
   end
 
   def draw
-    case @state.current
-    when :CHARGEN
-      @chargen.draw
-      @menu.draw
-    when :PLAYING
-      @map.draw
-      @menu.draw
-      
-    when :PLACING
-      @map.draw
-      @menu.draw
-    else
-      throw('UNKNOWN STATE!')
-    end
+    @main_state.draw
+
     @scene_ready = true
   end
 end
