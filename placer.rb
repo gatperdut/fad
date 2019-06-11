@@ -9,45 +9,71 @@ class Placer
 
   include Directions
 
-  def initialize(room)
-    @room = room
+  def initialize(window, placing_room, destination_room)
+    @window = window
 
-    @dock = nil
+    @placing_room = placing_room
 
-    @needs_redraw = false
+    @destination_room = destination_room
 
-    @valid = false
+    @dock_index = 0
+
+    set_dock
+
+    @dock.start_blinking
+
+    @needs_redraw = true
+
+    validate
   end
 
   def handle_input(id)
-    @room.move(Directions::KB2DIR[id]) if Directions::KB2DIR.include?(id)
+    @placing_room.move(Directions::KB2DIR[id]) if Directions::KB2DIR.include?(id)
 
     finish_placing if @valid && id == Gosu::KbReturn
 
-    @room.rotate if id == Gosu::KbR
+    cycle_dock if id == Gosu::KbC
+
+    @placing_room.rotate if id == Gosu::KbR
 
     validate
 
     @needs_redraw = true
   end
 
-  def start_placing(dock)
-    @dock = dock
+  def cycle_dock
+    @dock.stop_blinking
+
+    @dock_index = (@dock_index + 1) % @destination_room.layout.dock_tiles.length
+
+    set_dock
+
     @dock.start_blinking
   end
 
   def finish_placing
-    puts "DONE"
+    @window.map.rooms << @placing_room
+    in_game_state.switch_to(:place_ordinary_room, { destination_room: @placing_room })
   end
 
   def validate
-    @valid = @room.fits_with(@dock)
+    @valid = @placing_room.fits_with(@dock)
   end
 
   def draw
-    @room.draw
+    @placing_room.draw
 
-    @needs_redraw = !!@dock
+    @needs_redraw = false
+  end
+
+  private
+
+  def in_game_state
+    @window.in_game_state
+  end
+
+  def set_dock
+    @dock = @destination_room.layout.dock_tiles[@dock_index]
   end
 
 end

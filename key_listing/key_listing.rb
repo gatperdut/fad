@@ -16,6 +16,7 @@ class KeyListing
       kb_arrows: @window.image('media/kb_arrows.png'),
       G:         @window.image('media/G.png'),
       R:         @window.image('media/R.png'),
+      C:         @window.image('media/C.png'),
       esc:       @window.image('media/esc.png'),
       enter:     @window.image('media/enter.png')
     }

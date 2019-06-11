@@ -1,13 +1,13 @@
 require 'json'
 
-require './layout'
+require './rooms/layouts/layout'
 
 class Raws
 
   attr_reader :data
 
-  def initialize
-    file = File.read('data/rooms.json')
+  def initialize(file_path)
+    file = File.read(file_path)
     @data= JSON.parse(file)
 
     validate
@@ -18,7 +18,7 @@ class Raws
   def validate
     @data.each do |key, raw|
       valid = true
-      print "Loading raw room #{key} ... "
+      print "Loading room #{key} ... "
       first_width = raw[0].length
       0.upto(raw.length - 1) do |h|
         valid = false if raw[h].length != first_width

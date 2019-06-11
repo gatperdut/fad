@@ -2,6 +2,7 @@ require 'gosu'
 
 require './states/main_state'
 require './states/in_game_state'
+require './welcome_page'
 require './character_generation'
 require './map'
 require './key_listing/key_listing'
@@ -10,6 +11,7 @@ class Window < Gosu::Window
 
   attr_reader :main_state
   attr_reader :in_game_state
+  attr_reader :welcome_page
   attr_reader :character_generation
   attr_reader :map
   attr_reader :key_listing
@@ -22,11 +24,16 @@ class Window < Gosu::Window
 
     @in_game_state = InGameState.new(self)
 
+    @welcome_page = WelcomePage.new(self)
+
     @character_generation = CharacterGeneration.new(self)
 
     @key_listing = KeyListing.new(self)
 
     @map = Map.new(self)
+    @map.load_raws
+
+    @main_state.switch_to(:welcome_page)
 
     @scene_ready = false
   end

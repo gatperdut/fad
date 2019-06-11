@@ -1,4 +1,4 @@
-require './tiles/tile'
+require './rooms/layouts/tiles/tile'
 
 class FloorTile < Tile
 

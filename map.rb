@@ -1,43 +1,57 @@
-require './room'
+require './rooms/ordinary_room'
+require './rooms/entry_room'
 require './raws'
 require './placer'
+require './coord'
 
 class Map
 
   attr_reader :rooms
   attr_reader :placer
+  attr_reader :size
 
   def initialize(window)
     @window = window
 
-    @w = 20
-    @h = 30
+    @size = Coord.new(30, 21)
 
-    @raws = Raws.new
+    @rooms = []
 
-    @rooms = [
-      Room.new(@window, @raws.data['11'], 15, 10),
-      Room.new(@window, @raws.data['14'],  8,  5)
-    ]
+    @placer = nil
+  end
 
-    @placer = Placer.new(@rooms[1])
+  def load_raws
+    @ordinary_raws = Raws.new('data/ordinary_rooms.json')
+    @entry_raws = Raws.new('data/entry_rooms.json')
+  end
 
-    @placer.start_placing(@rooms[0].layout.dock_tiles[1])
+  def place_entry_room
+    throw 'There can only be 1 entry room and it must be the first!' unless @rooms.length.zero?
+
+    @rooms << EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
+  end
+
+  def place_ordinary_room(destination_room)
+    throw 'An entry room must be added before any ordinary rooms!' if @rooms.length.zero?
+
+    @rooms << OrdinaryRoom.new(@window, @ordinary_raws.data[['11', '12', '13', '14'].sample], 15, 10)
+
+    @placer = Placer.new(@window, @rooms.last, destination_room)
   end
 
   def needs_redraw?
-    @rooms.any? { |room| room.needs_redraw? } || @placer.needs_redraw?
+    @rooms.any? { |room| room.needs_redraw? } || (!@placer.nil? && @placer.needs_redraw?)
   end
 
   def draw
     draw_grid
     draw_rooms
-    @placer.draw
+    @placer.draw unless @placer.nil?
   end
 
   def draw_grid
-    for w in 0..(@w - 1) do
-      for h in 0..(@h - 1) do
+    for w in 0..(@size.x - 1) do
+      for h in 0..(@size.y - 1) do
         utx = 100 + w * 30
         uty = 100 + h * 30
         @window.draw_line(utx, uty, 0xFF888888, utx + 30, uty, 0xFF888888)
@@ -49,7 +63,9 @@ class Map
   end
 
   def draw_rooms
-    @rooms[0].draw
+    @rooms.each do |room|
+      room.draw
+    end
   end
 
 end

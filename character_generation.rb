@@ -15,8 +15,6 @@ class CharacterGeneration
     @frames = []
 
     @needs_redraw = false
-
-    generate
   end
 
   def generate
@@ -41,7 +39,7 @@ class CharacterGeneration
   end
 
   def accept
-    main_state.current = :in_game
+    main_state.switch_to(:in_game)
 
     @needs_redraw = true
   end

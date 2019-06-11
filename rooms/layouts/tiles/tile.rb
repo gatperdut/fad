@@ -1,3 +1,4 @@
+require 'pry'
 require './coord'
 
 class Tile
@@ -20,6 +21,7 @@ class Tile
   end
 
   def west_boundary
+    binding.pry if @coord.nil? || room.coord.nil?
     100 + @coord.x * 30 + room.coord.x * 30
   end
 

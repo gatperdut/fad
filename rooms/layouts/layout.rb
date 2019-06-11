@@ -1,5 +1,5 @@
-require './tiles/floor_tile'
-require './tiles/dock_tile'
+require './rooms/layouts/tiles/floor_tile'
+require './rooms/layouts/tiles/dock_tile'
 require './utils/directions'
 
 class Layout
