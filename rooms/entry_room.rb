@@ -23,4 +23,8 @@ class EntryRoom < Room
     throw ('Entry room with no entry tile!') if @coord.nil?
   end
 
+  def can_rotate?
+    false
+  end
+
 end

@@ -47,4 +47,8 @@ class KeyListing
     map.placer
   end
 
+  def dock_chooser
+    map.dock_chooser
+  end
+
 end

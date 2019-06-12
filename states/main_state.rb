@@ -51,7 +51,7 @@ class MainState
   end
 
   def switch_to_in_game
-    in_game_state.switch_to(:place_entry_room, {})
+    in_game_state.switch_to(:place_seed_room, {})
   end
 
   def welcome_page

@@ -19,4 +19,8 @@ class OrdinaryRoom < Room
     @coord = @coord + Directions::INCREMENT[dir]
   end
 
+  def can_rotate?
+    true
+  end
+
 end

@@ -10,10 +10,14 @@ class InGameState
 
   def handle_input(id)
     case @current
+    when :place_seed_room
+
     when :place_entry_room
       
     when :place_ordinary_room
       placer.handle_input(id)
+    when :choose_next_dock
+      dock_chooser.handle_input(id)
     else
       error_out
     end
@@ -21,10 +25,16 @@ class InGameState
 
   def draw
     case @current
+    when :place_seed_room
+      map.draw
+      key_listing.draw
     when :place_entry_room
       map.draw
       key_listing.draw
     when :place_ordinary_room
+      map.draw
+      key_listing.draw
+    when :choose_next_dock
       map.draw
       key_listing.draw
     else
@@ -38,13 +48,21 @@ class InGameState
 
   private
 
+  def switch_to_place_seed_room(params)
+    @window.map.place_seed_room
+    switch_to(:choose_next_dock, { room: map.rooms.last })
+  end
+
   def switch_to_place_entry_room(params)
-    @window.map.place_entry_room
-    switch_to(:place_ordinary_room, { destination_room: @window.map.rooms.last })
+    @window.map.place_entry_room(params[:dock])
   end
 
   def switch_to_place_ordinary_room(params)
-    @window.map.place_ordinary_room(params[:destination_room])
+    @window.map.place_ordinary_room(params[:dock])
+  end
+
+  def switch_to_choose_next_dock(params)
+    @window.map.choose_next_dock(params[:room])
   end
 
   def map
@@ -59,8 +77,12 @@ class InGameState
     map.placer
   end
 
+  def dock_chooser
+    map.dock_chooser
+  end
+
   def error_out
-    throw('UNKNOWN IN-GAME STATE!')
+    throw("UNKNOWN IN-GAME STATE #{@current}!")
   end
 
 end
