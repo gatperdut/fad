@@ -56,9 +56,15 @@ class Layout
     end
   end
 
-  def fits_with(dock_tile)
-    @dock_tiles.any? do |my_dock_tile|
-      my_dock_tile.fits_with(dock_tile)
+  def fit_for(dock_tile)
+    @dock_tiles.find do |my_dock_tile|
+      my_dock_tile.is_fit_for(dock_tile)
+    end
+  end
+
+  def unconnected_dock_tiles
+    @dock_tiles.select do |dock_tile|
+      !dock_tile.connected
     end
   end
 

@@ -20,9 +20,9 @@ class Map
 
     @rooms = []
 
-    @placer = nil
+    @placer = Placer.new(window)
 
-    @dock_chooser = nil
+    @dock_chooser = DockChooser.new(window)
   end
 
   def load_raws
@@ -37,12 +37,10 @@ class Map
     @rooms << SeedRoom.new(@window, @seed_raws.data['1'])
   end
 
-  def place_entry_room(dock)
+  def place_entry_room
     throw 'There can only be 1 entry room and it must be the first!' unless @rooms.length == 1
 
-    room = EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
-
-    @placer = Placer.new(@window, dock, room)
+    @rooms << EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
   end
 
   def place_ordinary_room(dock)
@@ -50,22 +48,22 @@ class Map
 
     room = OrdinaryRoom.new(@window, @ordinary_raws.data[['11', '12', '13', '14'].sample], 15, 10)
 
-    @placer = Placer.new(@window, dock, room)
+    @placer.start_placing(dock, room)
   end
 
   def choose_next_dock(room)
-    @dock_chooser = DockChooser.new(@window, room)
+    @dock_chooser.start_choosing(room)
   end
 
   def needs_redraw?
-    @rooms.any? { |room| room.needs_redraw? } || (!@placer.nil? && @placer.needs_redraw?) || (!@dock_chooser.nil? && @dock_chooser.needs_redraw?)
+    @rooms.any? { |room| room.needs_redraw? } || @placer.needs_redraw? || @dock_chooser.needs_redraw?
   end
 
   def draw
     draw_grid
     draw_rooms
-    @placer.draw unless @placer.nil?
-    @dock_chooser.draw unless @dock_chooser.nil?
+    @placer.draw if @placer.running?
+    @dock_chooser.draw if @dock_chooser.running?
   end
 
   def draw_grid

@@ -4,21 +4,25 @@ class Placer
 
   attr_reader :needs_redraw
   alias_method :needs_redraw?, :needs_redraw
+  
   attr_reader :valid
   alias_method :valid?, :valid
 
+  attr_reader :running
+  alias_method :running?, :running
+
   include Directions
 
-  def initialize(window, dock, room)
+  def initialize(window)
     @window = window
 
-    @dock = dock
+    @dock = nil
 
-    @room = room
+    @room = nil
 
-    @needs_redraw = true
+    @needs_redraw = false
 
-    validate
+    @running = false
   end
 
   def handle_input(id)
@@ -33,13 +37,34 @@ class Placer
     @needs_redraw = true
   end
 
+  def start_placing(dock, room)
+    @dock = dock
+    @room = room
+
+    @dock.start_blinking
+
+    @needs_redraw = true
+
+    @running = true
+
+    validate
+  end
+
   def finish_placing
+    @dock.stop_blinking
+
     @window.map.rooms << @room
-    in_game_state.switch_to(:place_ordinary_room, { room: @room })
+    in_game_state.switch_to(:face_encounter, { room: @room })
+
+    @dock.connected = true
+
+    @room.fit_for(@dock).connected = true
+
+    @running = false
   end
 
   def validate
-    @valid = @room.fits_with(@dock)
+    @valid = !!@room.fit_for(@dock)
   end
 
   def draw

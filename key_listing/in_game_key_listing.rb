@@ -5,7 +5,7 @@ module InGameKeyListing
   end
 
   def draw_place_entry_room
-    @font.draw_text('TO-DO', 1450, 620, 0, 1.0, 1.0, 0xFF222222)
+
   end
 
   def draw_place_ordinary_room
@@ -27,7 +27,11 @@ module InGameKeyListing
     @font.draw_text('Cycle exit', 1450, 535, 0, 1.0, 1.0, dock_chooser.can_cycle? ? 0xFF222222 : 0xFF888888)
 
     @images[:enter].draw(1295, 600, 0, 0.1, 0.1)
-    @font.draw_text('Accept', 1455, 630, 0, 1.0, 1.0, 0xFF222222)
+    @font.draw_text(dock_chooser.seed_room? ? 'Enter dungeon' : 'Accept', 1455, 630, 0, 1.0, 1.0, 0xFF222222)
+  end
+
+  def draw_face_encounter
+    @font.draw_text('TO-DO', 1450, 620, 0, 1.0, 1.0, 0xFF222222)
   end
 
 end

@@ -24,8 +24,20 @@ class Room
     @needs_redraw = false
   end
 
-  def fits_with(dock_tile)
-    @layout.fits_with(dock_tile)
+  def fit_for(dock_tile)
+    @layout.fit_for(dock_tile)
+  end
+
+  def seed_room?
+    self.class.to_s.to_sym == :SeedRoom
+  end
+
+  def entry_room?
+    self.class.to_s.to_sym == :EntryRoom
+  end
+
+  def ordinary_room?
+    self.class.to_s.to_sym == :OrdinaryRoom
   end
 
   protected

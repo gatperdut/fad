@@ -4,6 +4,7 @@ require './states/main_state'
 require './states/in_game_state'
 require './welcome_page'
 require './character_generation'
+require './encounter_generator'
 require './map'
 require './key_listing/key_listing'
  
@@ -28,6 +29,8 @@ class Window < Gosu::Window
 
     @character_generation = CharacterGeneration.new(self)
 
+    @encounter_generator = EncounterGenerator.new(self)
+
     @key_listing = KeyListing.new(self)
 
     @map = Map.new(self)
@@ -36,10 +39,12 @@ class Window < Gosu::Window
     @main_state.switch_to(:welcome_page)
 
     @scene_ready = false
+
+    @font = font(30, Gosu::default_font_name)
   end
 
-  def font(size)
-    Gosu::Font.new(self, 'media/thieving-mice.ttf', size)
+  def font(size, name='media/thieving-mice.ttf')
+    Gosu::Font.new(self, name, size)
   end
 
   def image(path)
@@ -65,9 +70,19 @@ class Window < Gosu::Window
   end
 
   def draw
+    draw_state_names
+
     @main_state.draw
 
     @scene_ready = true
+  end
+
+  private
+
+  def draw_state_names
+    @font.draw_text(@main_state.current, 10, 10, 0, 1.0, 1.0, 0xFFFFFFFF)
+
+    @font.draw_text(@in_game_state.current, 10, 1170, 0, 1.0, 1.0, 0xFFFFFFFF)
   end
 end
 

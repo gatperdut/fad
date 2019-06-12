@@ -4,12 +4,16 @@ require './utils/directions'
 
 class DockTile < Tile
 
+  attr_accessor :connected
+
   include Directions
 
   def initialize(layout, y, x, code)
     super(layout, y, x, code)
 
     @blinker = Blinker.new
+
+    @connected = false
   end
 
   DIRS.each do |dir|
@@ -29,7 +33,7 @@ class DockTile < Tile
     world_coord + Directions::INCREMENT[@code]
   end
 
-  def fits_with(dock_tile)
+  def is_fit_for(dock_tile)
     dest_coord == dock_tile.world_coord && Directions::OPPOSITE[@code] == dock_tile.code
   end
 

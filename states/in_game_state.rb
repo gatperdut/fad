@@ -18,6 +18,8 @@ class InGameState
       placer.handle_input(id)
     when :choose_next_dock
       dock_chooser.handle_input(id)
+    when :face_encounter
+      switch_to(:choose_next_dock, { room: map.rooms.last })
     else
       error_out
     end
@@ -37,6 +39,9 @@ class InGameState
     when :choose_next_dock
       map.draw
       key_listing.draw
+    when :face_encounter
+      map.draw
+      key_listing.draw
     else
     end
   end
@@ -54,7 +59,8 @@ class InGameState
   end
 
   def switch_to_place_entry_room(params)
-    @window.map.place_entry_room(params[:dock])
+    @window.map.place_entry_room
+    switch_to(:face_encounter, { room: map.rooms.last })
   end
 
   def switch_to_place_ordinary_room(params)
@@ -63,6 +69,10 @@ class InGameState
 
   def switch_to_choose_next_dock(params)
     @window.map.choose_next_dock(params[:room])
+  end
+
+  def switch_to_face_encounter(params)
+
   end
 
   def map

@@ -28,7 +28,7 @@ class KeyListing
   end
 
   def draw_frame
-    @images[:frame].draw(1200, 200, 0, 0.7, 0.7)
+    @images[:frame].draw(1200, 200, 0, 0.9, 0.7)
   end
 
   def main_state
