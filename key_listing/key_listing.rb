@@ -1,8 +1,10 @@
 require './key_listing/main_key_listing'
 require './key_listing/in_game_key_listing'
+require './key_listing/idle_key_listing'
 
 class KeyListing
 
+  include IdleKeyListing
   include MainKeyListing
   include InGameKeyListing
 
@@ -17,6 +19,7 @@ class KeyListing
       G:         @window.image('media/G.png'),
       R:         @window.image('media/R.png'),
       C:         @window.image('media/C.png'),
+      V:         @window.image('media/V.png'),
       esc:       @window.image('media/esc.png'),
       enter:     @window.image('media/enter.png')
     }
@@ -37,6 +40,10 @@ class KeyListing
 
   def in_game_state
     @window.in_game_state
+  end
+
+  def idle_state
+    @window.idle_state
   end
 
   def map

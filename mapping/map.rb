@@ -2,8 +2,8 @@ require './rooms/seed_room'
 require './rooms/ordinary_room'
 require './rooms/entry_room'
 require './raws'
-require './placer'
-require './dock_chooser'
+require './mapping/placer'
+require './mapping/dock_chooser'
 require './coord'
 
 class Map
@@ -51,8 +51,8 @@ class Map
     @placer.start_placing(dock, room)
   end
 
-  def choose_next_dock(room)
-    @dock_chooser.start_choosing(room)
+  def choose_next_dock
+    @dock_chooser.start_choosing(party.room)
   end
 
   def needs_redraw?
@@ -64,6 +64,7 @@ class Map
     draw_rooms
     @placer.draw if @placer.running?
     @dock_chooser.draw if @dock_chooser.running?
+    party.draw
   end
 
   def draw_grid
@@ -83,6 +84,10 @@ class Map
     @rooms.each do |room|
       room.draw
     end
+  end
+
+  def party
+    @window.party
   end
 
 end

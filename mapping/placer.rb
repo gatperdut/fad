@@ -53,7 +53,7 @@ class Placer
   def finish_placing
     @dock.stop_blinking
 
-    @window.map.rooms << @room
+    map.rooms << @room
     in_game_state.switch_to(:face_encounter, { room: @room })
 
     @dock.connected = true
@@ -74,6 +74,10 @@ class Placer
   end
 
   private
+
+  def map
+    @window.map
+  end
 
   def in_game_state
     @window.in_game_state

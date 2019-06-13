@@ -10,6 +10,8 @@ class InGameState
 
   def handle_input(id)
     case @current
+    when :idle
+      idle_state.handle_input(id)
     when :place_seed_room
 
     when :place_entry_room
@@ -19,7 +21,7 @@ class InGameState
     when :choose_next_dock
       dock_chooser.handle_input(id)
     when :face_encounter
-      switch_to(:choose_next_dock, { room: map.rooms.last })
+      switch_to(:idle, { })
     else
       error_out
     end
@@ -27,6 +29,9 @@ class InGameState
 
   def draw
     case @current
+    when :idle
+      map.draw
+      key_listing.draw
     when :place_seed_room
       map.draw
       key_listing.draw
@@ -55,7 +60,12 @@ class InGameState
 
   def switch_to_place_seed_room(params)
     @window.map.place_seed_room
-    switch_to(:choose_next_dock, { room: map.rooms.last })
+    party.move_to(map.rooms.last)
+    switch_to(:choose_next_dock, {})
+  end
+
+  def switch_to_idle(params)
+    idle_state.switch_to(:general_menu, {})
   end
 
   def switch_to_place_entry_room(params)
@@ -68,15 +78,23 @@ class InGameState
   end
 
   def switch_to_choose_next_dock(params)
-    @window.map.choose_next_dock(params[:room])
+    @window.map.choose_next_dock
   end
 
   def switch_to_face_encounter(params)
+    party.move_to(params[:room])
+  end
 
+  def idle_state
+    @window.idle_state
   end
 
   def map
     @window.map
+  end
+
+  def party
+    @window.party
   end
 
   def key_listing

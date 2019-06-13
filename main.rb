@@ -2,19 +2,23 @@ require 'gosu'
 
 require './states/main_state'
 require './states/in_game_state'
+require './states/idle_state'
 require './welcome_page'
 require './character_generation'
 require './encounter_generator'
-require './map'
+require './mapping/map'
+require './characters/party'
 require './key_listing/key_listing'
  
 class Window < Gosu::Window
 
   attr_reader :main_state
   attr_reader :in_game_state
+  attr_reader :idle_state
   attr_reader :welcome_page
   attr_reader :character_generation
   attr_reader :map
+  attr_reader :party
   attr_reader :key_listing
 
   def initialize(width=2000, height=1200, fullscreen=false)
@@ -24,6 +28,8 @@ class Window < Gosu::Window
     @main_state = MainState.new(self)
 
     @in_game_state = InGameState.new(self)
+
+    @idle_state = IdleState.new(self)
 
     @welcome_page = WelcomePage.new(self)
 
@@ -35,6 +41,8 @@ class Window < Gosu::Window
 
     @map = Map.new(self)
     @map.load_raws
+
+    @party = Party.new(self)
 
     @main_state.switch_to(:welcome_page)
 

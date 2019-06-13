@@ -1,5 +1,9 @@
 module InGameKeyListing
 
+  def draw_idle
+    send("draw_#{idle_state.current}")
+  end
+
   def draw_place_seed_room
 
   end
