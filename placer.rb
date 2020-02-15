@@ -62,8 +62,10 @@ class Placer
 
     @dock.stop_blinking
 
-    @dock.connected = true
-    @destination_dock.connected = true
+    @dock.connection = @destination_dock.layout.room
+    @destination_dock.connection = @dock.layout.room
+
+    @window.map.cull_invalidated_docks
 
     in_game_state.switch_to(:place_ordinary_room, { destination_room: @placing_room })
   end

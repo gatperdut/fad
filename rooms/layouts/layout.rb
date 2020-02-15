@@ -69,7 +69,7 @@ class Layout
 
   def unconnected_dock_tiles
     @dock_tiles.select do |dock_tile|
-      !dock_tile.connected
+      dock_tile.connection.nil?
     end
   end
 

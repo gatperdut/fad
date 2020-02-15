@@ -7,7 +7,7 @@ class FloorTile < Tile
   end
 
   def draw
-    super(0xFF888888)
+    super(0xFF666666)
   end
 
 end

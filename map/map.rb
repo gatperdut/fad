@@ -51,6 +51,10 @@ class Map
     @placer = Placer.new(@window, room, destination_room)
   end
 
+  def cull_invalidated_docks
+    also connect other pairs of docks which may happen to get connected as well!
+  end
+
   def needs_redraw?
     @rooms.any? { |room| room.needs_redraw? } || (!@placer.nil? && @placer.needs_redraw?)
   end

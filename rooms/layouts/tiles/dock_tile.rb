@@ -4,14 +4,14 @@ require './utils/directions'
 
 class DockTile < Tile
 
-  attr_accessor :connected
+  attr_accessor :connection
 
   include Directions
 
   def initialize(layout, y, x, code)
     super(layout, y, x, code)
 
-    @connected = false
+    @connection = nil
 
     @blinker = Blinker.new
   end
@@ -24,7 +24,7 @@ class DockTile < Tile
 
   def draw
     @blinker.blink
-    color = @blinker.modulated_color(0x88, 0x88, 0x88)
+    color = @blinker.modulated_color(0x66, 0x66, 0x66)
     super(color)
     send("draw_connection_#{@code}")
   end
@@ -50,19 +50,19 @@ class DockTile < Tile
   end
 
   def draw_connection_n
-    window.draw_rect(west_boundary, north_boundary - 1, 30, 4, connection_color)
+    window.draw_rect(w_boundary, n_boundary - 3, 30, 5, connection_color)
   end
 
   def draw_connection_e
-    window.draw_rect(east_boundary - 3, north_boundary, 4, 30, connection_color)
+    window.draw_rect(e_boundary - 3, n_boundary, 5, 30, connection_color)
   end
 
   def draw_connection_s
-    window.draw_rect(west_boundary, south_boundary - 3, 30, 4, connection_color)
+    window.draw_rect(w_boundary, s_boundary - 3, 30, 5, connection_color)
   end
 
   def draw_connection_w
-    window.draw_rect(west_boundary - 1, north_boundary, 4, 30, connection_color)
+    window.draw_rect(w_boundary - 3, n_boundary, 5, 30, connection_color)
   end
 
 

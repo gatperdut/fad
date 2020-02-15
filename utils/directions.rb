@@ -37,4 +37,11 @@ module Directions
     w: :e
   }
 
+  WALL_VERTICES = {
+    n: [:w, :n, :e, :n],
+    e: [:e, :n, :e, :s],
+    s: [:e, :s, :w, :s],
+    w: [:w, :s, :w, :n]
+  }
+
 end
