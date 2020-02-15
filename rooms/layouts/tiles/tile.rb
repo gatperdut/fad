@@ -71,6 +71,10 @@ class Tile
     end
   end
 
+  def remove_self
+    @layout.remove_tile(self)
+  end
+
   def is_wall?(direction)
     adjacent_tile = @layout.tile_at(@coord.y + Directions::INCREMENT[direction].y, @coord.x + Directions::INCREMENT[direction].x)
 

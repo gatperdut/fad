@@ -55,6 +55,18 @@ class Layout
     result
   end
 
+  def remove_tile(tile)
+    tile_removed = @dock_tiles.delete(tile)
+
+    @floor_tiles.delete(tile) if tile_removed.nil?
+  end
+
+  def turn_dock_to_floor(dock)
+    @dock_tiles.delete(dock)
+
+    @floor_tiles << FloorTile.new(self, dock.coord.y, dock.coord.x, dock.code)
+  end
+
   def draw
     all_tiles.each do |tile|
       tile.draw

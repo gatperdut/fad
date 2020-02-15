@@ -49,6 +49,10 @@ class DockTile < Tile
     @blinker.modulated_color(0xFF, 0x00, 0x00)
   end
 
+  def turn_to_floor
+    layout.turn_dock_to_floor(self)
+  end
+
   def draw_connection_n
     window.draw_rect(w_boundary, n_boundary - 3, 30, 5, connection_color)
   end

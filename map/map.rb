@@ -52,7 +52,20 @@ class Map
   end
 
   def cull_invalidated_docks
-    also connect other pairs of docks which may happen to get connected as well!
+    docks_to_cull = []
+
+    @rooms.each do |room|
+      room.layout.dock_tiles.each do |dock|
+        next unless dock.connection.nil?
+
+
+        docks_to_cull << dock if @taken.taken_at(dock.dest_coord.y, dock.dest_coord.x)
+      end
+    end
+
+    docks_to_cull.each do |dock|
+      dock.turn_to_floor
+    end
   end
 
   def needs_redraw?
