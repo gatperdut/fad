@@ -3,13 +3,22 @@ require './coord'
 
 class Tile
 
+  attr_accessor :overlapping
   attr_reader :code
   attr_reader :coord
 
   def initialize(layout, y, x, code)
     @layout = layout
+
     @coord = Coord.new(y, x)
+
     @code = code
+
+    @overlapping = false
+  end
+
+  def is_at?(y, x)
+    @coord.y == y && coord.x == x
   end
 
   def north_boundary
@@ -21,7 +30,6 @@ class Tile
   end
 
   def west_boundary
-    binding.pry if @coord.nil? || room.coord.nil?
     100 + @coord.x * 30 + room.coord.x * 30
   end
 
@@ -30,8 +38,9 @@ class Tile
   end
 
   def draw(color)
-    draw_filling(color)
+    draw_filling(@overlapping ? 0xFFFF0000 : color)
     draw_edge
+    draw_walls
   end
 
   def draw_filling(color)
@@ -44,6 +53,10 @@ class Tile
     window.draw_line(west_boundary, north_boundary, color, west_boundary, south_boundary, color)
     window.draw_line(east_boundary, north_boundary, color, east_boundary, south_boundary, color)
     window.draw_line(west_boundary, south_boundary, color, east_boundary, south_boundary, color)
+  end
+
+  def draw_walls
+
   end
 
   def world_coord

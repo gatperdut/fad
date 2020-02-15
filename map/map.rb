@@ -1,3 +1,4 @@
+require './map/taken'
 require './rooms/ordinary_room'
 require './rooms/entry_room'
 require './raws'
@@ -9,6 +10,7 @@ class Map
   attr_reader :rooms
   attr_reader :placer
   attr_reader :size
+  attr_reader :taken
 
   def initialize(window)
     @window = window
@@ -18,6 +20,8 @@ class Map
     @rooms = []
 
     @placer = nil
+
+    @taken = Taken.new(@window)
   end
 
   def load_raws
@@ -25,18 +29,26 @@ class Map
     @entry_raws = Raws.new('data/entry_rooms.json')
   end
 
+  def add_room(room)
+    @rooms << room
+
+    @taken.add(room)
+  end
+
   def place_entry_room
     throw 'There can only be 1 entry room and it must be the first!' unless @rooms.length.zero?
 
-    @rooms << EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
+    new_room = EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
+
+    add_room(new_room)
   end
 
   def place_ordinary_room(destination_room)
     throw 'An entry room must be added before any ordinary rooms!' if @rooms.length.zero?
 
-    @rooms << OrdinaryRoom.new(@window, @ordinary_raws.data[['11', '12', '13', '14'].sample], 15, 10)
+    room = OrdinaryRoom.new(@window, @ordinary_raws.data[['11', '12', '13', '14'].sample], 15, 10)
 
-    @placer = Placer.new(@window, @rooms.last, destination_room)
+    @placer = Placer.new(@window, room, destination_room)
   end
 
   def needs_redraw?

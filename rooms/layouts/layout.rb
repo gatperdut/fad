@@ -10,10 +10,11 @@ class Layout
   attr_reader :dock_tiles
   attr_reader :floor_tiles
 
-  def initialize(room, raw)
+  def initialize(window, room, raw)
+    @window = window
     @room = room
     @raw = raw
-    
+
     @dock_tiles = []
     @floor_tiles = []
     fill_tiles
@@ -27,10 +28,14 @@ class Layout
     @raw[0].length
   end
 
+  def all_tiles
+    @dock_tiles + @floor_tiles
+  end
+
   def fill_tiles
     0.upto(height - 1) do |h|
       0.upto(width - 1) do |w|
-        code = @raw[h][w].to_sym
+        code = sym(h, w)
         if Directions::DIRS.include?(code)
           @dock_tiles << DockTile.new(self, h, w, code)
         elsif code != :v
@@ -51,14 +56,20 @@ class Layout
   end
 
   def draw
-    (@dock_tiles + @floor_tiles).each do |tile|
+    all_tiles.each do |tile|
       tile.draw
     end
   end
 
-  def fits_with(dock_tile)
-    @dock_tiles.any? do |my_dock_tile|
+  def fitting_dock_tile(dock_tile)
+    @dock_tiles.find do |my_dock_tile|
       my_dock_tile.fits_with(dock_tile)
+    end
+  end
+
+  def unconnected_dock_tiles
+    @dock_tiles.select do |dock_tile|
+      !dock_tile.connected
     end
   end
 
@@ -78,6 +89,18 @@ class Layout
     @dock_tiles.clear
     @floor_tiles.clear
     fill_tiles
+  end
+
+  def clear_overlapping
+    all_tiles.each do |tile|
+      tile.overlapping = false
+    end
+  end
+
+  def tile_at(y, x)
+    all_tiles.find do |tile|
+      tile.is_at?(y, x)
+    end
   end
 
   def color(y, x)

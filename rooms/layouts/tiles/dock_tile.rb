@@ -4,10 +4,14 @@ require './utils/directions'
 
 class DockTile < Tile
 
+  attr_accessor :connected
+
   include Directions
 
   def initialize(layout, y, x, code)
     super(layout, y, x, code)
+
+    @connected = false
 
     @blinker = Blinker.new
   end

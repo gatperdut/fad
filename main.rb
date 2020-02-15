@@ -4,9 +4,9 @@ require './states/main_state'
 require './states/in_game_state'
 require './welcome_page'
 require './character_generation'
-require './map'
+require './map/map'
 require './key_listing/key_listing'
- 
+
 class Window < Gosu::Window
 
   attr_reader :main_state
@@ -32,6 +32,7 @@ class Window < Gosu::Window
 
     @map = Map.new(self)
     @map.load_raws
+    @map.taken.setup_grid
 
     @main_state.switch_to(:welcome_page)
 

@@ -13,7 +13,7 @@ class Room
 
   def initialize(window, raw)
     @window = window
-    @layout = Layout.new(self, raw)
+    @layout = Layout.new(@window, self, raw)
 
     @needs_redraw = false
   end
@@ -24,8 +24,8 @@ class Room
     @needs_redraw = false
   end
 
-  def fits_with(dock_tile)
-    @layout.fits_with(dock_tile)
+  def fitting_dock_tile(dock_tile)
+    @layout.fitting_dock_tile(dock_tile)
   end
 
   protected
