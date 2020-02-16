@@ -20,8 +20,12 @@ class Tile
     @overlapping = false
   end
 
-  def is_at?(y, x)
-    @coord.y == y && coord.x == x
+  def is_at?(coord)
+    @coord == coord
+  end
+
+  def adjacent_tile(direction)
+    @layout.tile_at(@coord + Directions::INCREMENT[direction])
   end
 
   def n_boundary
@@ -76,9 +80,7 @@ class Tile
   end
 
   def is_wall?(direction)
-    adjacent_tile = @layout.tile_at(@coord.y + Directions::INCREMENT[direction].y, @coord.x + Directions::INCREMENT[direction].x)
-
-    adjacent_tile.nil?
+    adjacent_tile(direction).nil?
   end
 
   def world_coord

@@ -33,33 +33,22 @@ class Taken
     end
   end
 
-  def taken_at(y, x)
-    @grid[y][x]
-  end
-
-  def within_boundaries?(y, x)
-    return false if y < 0
-
-    return false if x < 0
-
-    return false if y >= height
-
-    return false if x >= width
-
-    true
+  def taken_at(coord)
+    @grid[coord.y][coord.x]
   end
 
   def overlaps?(room)
-    coord = room.coord
-
     result = false
 
     room.layout.height.times do |y|
       room.layout.width.times do |x|
-        next unless within_boundaries?(coord.y + y, coord.x + x)
+        tile_relative_coord = Coord.new(y, x)
+        tile_world_coord = room.coord + Coord.new(y, x)
 
-        if !room.layout.void?(y, x) && taken_at(coord.y + y, coord.x + x)
-          room.layout.tile_at(y, x).overlapping = true
+        next unless @window.map.within_boundaries?(tile_world_coord)
+
+        if !room.layout.void?(y, x) && taken_at(tile_world_coord)
+          room.layout.tile_at(tile_relative_coord).overlapping = true
           result = true
         end
       end

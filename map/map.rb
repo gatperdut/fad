@@ -2,7 +2,7 @@ require './map/taken'
 require './rooms/ordinary_room'
 require './rooms/entry_room'
 require './raws'
-require './placer'
+require './placer/placer'
 require './coord'
 
 class Map
@@ -43,6 +43,18 @@ class Map
     add_room(new_room)
   end
 
+  def within_boundaries?(coord)
+    return false if coord.y < 0
+
+    return false if coord. x < 0
+
+    return false if coord.y >= @size.y
+
+    return false if coord.x >= @size.x
+
+    true
+  end
+
   def place_ordinary_room(destination_room)
     throw 'An entry room must be added before any ordinary rooms!' if @rooms.length.zero?
 
@@ -58,8 +70,11 @@ class Map
       room.layout.dock_tiles.each do |dock|
         next unless dock.connection.nil?
 
+        needs_culling = @taken.taken_at(dock.dest_coord)
 
-        docks_to_cull << dock if @taken.taken_at(dock.dest_coord.y, dock.dest_coord.x)
+        needs_culling = true unless within_boundaries?(dock.world_coord + Directions::INCREMENT[dock.code])
+
+        docks_to_cull << dock if needs_culling
       end
     end
 

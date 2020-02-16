@@ -1,3 +1,4 @@
+require './placer/trimmer'
 require './utils/directions'
 
 class Placer
@@ -11,6 +12,8 @@ class Placer
 
   def initialize(window, placing_room, destination_room)
     @window = window
+
+    @trimmer = Trimmer.new(@window)
 
     @placing_room = placing_room
 
@@ -58,6 +61,8 @@ class Placer
   end
 
   def finish_placing
+    @trimmer.trim(@placing_room, @destination_dock)
+
     @window.map.add_room(@placing_room)
 
     @dock.stop_blinking

@@ -109,9 +109,9 @@ class Layout
     end
   end
 
-  def tile_at(y, x)
+  def tile_at(coord)
     all_tiles.find do |tile|
-      tile.is_at?(y, x)
+      tile.is_at?(coord)
     end
   end
 
