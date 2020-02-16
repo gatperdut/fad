@@ -16,8 +16,6 @@ class Tile
     @coord = Coord.new(y, x)
 
     @code = code
-
-    @overlapping = false
   end
 
   def is_at?(coord)
@@ -45,7 +43,10 @@ class Tile
   end
 
   def draw(color)
-    draw_filling(@overlapping ? 0xFFFF0000 : color)
+    overlapping = !window.map.placer.nil? && window.map.placer.overlaps.include?(self)
+
+    draw_filling(overlapping ? 0xFFFF0000 : color)
+
     draw_edge
   end
 

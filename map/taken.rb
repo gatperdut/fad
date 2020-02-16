@@ -37,8 +37,12 @@ class Taken
     @grid[coord.y][coord.x]
   end
 
-  def overlaps?(room)
-    result = false
+  def remove_tile(coord)
+    @grid[coord.y][coord.x] = false
+  end
+
+  def overlaps(room)
+    result = []
 
     room.layout.height.times do |y|
       room.layout.width.times do |x|
@@ -48,8 +52,7 @@ class Taken
         next unless @window.map.within_boundaries?(tile_world_coord)
 
         if !room.layout.void?(y, x) && taken_at(tile_world_coord)
-          room.layout.tile_at(tile_relative_coord).overlapping = true
-          result = true
+          result << room.layout.tile_at(tile_relative_coord)
         end
       end
     end

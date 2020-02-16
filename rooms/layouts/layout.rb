@@ -59,6 +59,10 @@ class Layout
     tile_removed = @dock_tiles.delete(tile)
 
     @floor_tiles.delete(tile) if tile_removed.nil?
+
+    @raw[tile.coord.y][tile.coord.x] = :v
+
+    @window.map.taken.remove_tile(tile.world_coord)
   end
 
   def turn_dock_to_floor(dock)

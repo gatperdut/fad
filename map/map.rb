@@ -38,7 +38,8 @@ class Map
   def place_entry_room
     throw 'There can only be 1 entry room and it must be the first!' unless @rooms.length.zero?
 
-    new_room = EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
+    #new_room = EntryRoom.new(@window, @entry_raws.data[[1, 2, 3].sample.to_s])
+    new_room = EntryRoom.new(@window, @entry_raws.data['2'])
 
     add_room(new_room)
   end
@@ -58,29 +59,14 @@ class Map
   def place_ordinary_room(destination_room)
     throw 'An entry room must be added before any ordinary rooms!' if @rooms.length.zero?
 
-    room = OrdinaryRoom.new(@window, @ordinary_raws.data[['11', '12', '13', '14'].sample], 15, 10)
+    #room = OrdinaryRoom.new(@window, @ordinary_raws.data[['11', '12', '13', '14'].sample], 15, 10)
+    room = OrdinaryRoom.new(@window, @ordinary_raws.data['14'], 15, 10)
 
     @placer = Placer.new(@window, room, destination_room)
   end
 
-  def cull_invalidated_docks
-    docks_to_cull = []
-
-    @rooms.each do |room|
-      room.layout.dock_tiles.each do |dock|
-        next unless dock.connection.nil?
-
-        needs_culling = @taken.taken_at(dock.dest_coord)
-
-        needs_culling = true unless within_boundaries?(dock.world_coord + Directions::INCREMENT[dock.code])
-
-        docks_to_cull << dock if needs_culling
-      end
-    end
-
-    docks_to_cull.each do |dock|
-      dock.turn_to_floor
-    end
+  def done_placing
+    @placer = nil
   end
 
   def needs_redraw?

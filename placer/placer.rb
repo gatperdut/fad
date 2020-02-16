@@ -7,17 +7,18 @@ class Placer
   alias_method :needs_redraw?, :needs_redraw
   attr_reader :valid
   alias_method :valid?, :valid
+  attr_reader :overlaps
 
   include Directions
 
   def initialize(window, placing_room, destination_room)
     @window = window
 
-    @trimmer = Trimmer.new(@window)
-
     @placing_room = placing_room
 
     @destination_room = destination_room
+
+    @overlaps = nil;
 
     @destination_dock = nil
 
@@ -33,7 +34,6 @@ class Placer
   end
 
   def handle_input(id)
-
     @placing_room.move(Directions::KB2DIR[id]) if Directions::KB2DIR.include?(id)
 
 
@@ -61,16 +61,14 @@ class Placer
   end
 
   def finish_placing
-    @trimmer.trim(@placing_room, @destination_dock)
-
     @window.map.add_room(@placing_room)
-
-    @dock.stop_blinking
 
     @dock.connection = @destination_dock.layout.room
     @destination_dock.connection = @dock.layout.room
 
-    @window.map.cull_invalidated_docks
+    Trimmer.new(@window, @destination_dock).call
+
+    @dock.stop_blinking
 
     in_game_state.switch_to(:place_ordinary_room, { destination_room: @placing_room })
   end
@@ -78,9 +76,9 @@ class Placer
   def validate
     @destination_dock = @placing_room.fitting_dock_tile(@dock)
 
-    overlaps = @window.map.taken.overlaps?(@placing_room)
+    @overlaps = @window.map.taken.overlaps(@placing_room)
 
-    @valid = !@destination_dock.nil? && !overlaps
+    @valid = !@destination_dock.nil?
   end
 
   def draw
